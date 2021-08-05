@@ -1,0 +1,5 @@
+outs:
+- md5: 4ee1665f95dd248831017da3436b7d1a.dir
+  size: 1126572973
+  nfiles: 3
+  path: tf_serving
