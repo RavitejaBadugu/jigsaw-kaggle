@@ -17,15 +17,13 @@ def get_predictions(text):
         tokenized=['<s>']+tokenized+['</s>']+['<pad>']*(sent_length-curr_len-2)
     token_ids=x_tokenizer.convert_tokens_to_ids(tokenized)
     mask=np.char.not_equal('<pad>',tokenized).astype(np.int32)
-    test_inputs['input_ids']=np.expand_dims(np.cast(token_ids,dtype=np.int32),axis=0)
-    test_inputs['attention_mask']=np.expand_dims(np.cast(mask,dtype=np.int32),axis=0)
-    #test_inputs['input_ids'][0,]=test_inputs['input_ids'][0,].
-    #test_inputs['attention_mask'][0,]=test_inputs['attention_mask'][0,].tolist()
-    print(test_inputs)
+    test_inputs['input_ids']=np.asarray(token_ids,dtype=np.int32).tolist()
+    test_inputs['attention_mask']=np.asarray(mask,dtype=np.int32).tolist()
     data=json.dumps({"signature_name": "serving_default",
      "instances": [test_inputs]})
     headers={"content-type": "application/json"}
-    response=json.loads(requests.post(URL,data=data,headers=headers))['predictions']
+    response=requests.post(URL,data=data,headers=headers)
+    response=json.loads(response.text)['predictions'][0][0]
     return response
 
 
